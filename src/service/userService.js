@@ -32,7 +32,7 @@ const createNewUser = async (email, password, username) => {
     await db.User.create({
       username: username,
       email: email,
-      password: password
+      password: hashPass
     })
   } catch (error) {
     console.log(">>check err", error)
@@ -42,6 +42,38 @@ const createNewUser = async (email, password, username) => {
 
 //  lay ra list
 const getUserList = async () => {
+
+  // test moi quan he
+  let newUser = await db.User.findOne({
+    where: { id: 1 },
+    attributes: ["id", "username", "email"],
+    include: {
+      model: db.Group, attributes: ["username", "description"],
+    },
+    raw: true,
+    nest: true
+  })
+
+
+  // let roles = await db.Group.findOne({
+  //   where: { id: 1 },
+  //   include: { model: db.Role },
+  //   nest: true
+  // })
+
+  let r = await db.Role.findAll({
+
+    include: { model: db.Group, where: { id: 1 } },
+    nest: true
+  })
+
+
+
+  console.log(">> check new user: ", newUser);
+  console.log(">> check new role: ", r);
+
+
+
   let users = [];
   users = await db.User.findAll();
   return users;

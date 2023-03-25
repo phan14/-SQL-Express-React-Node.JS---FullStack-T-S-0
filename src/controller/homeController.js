@@ -9,6 +9,7 @@ const handleHelloWord = (req, res) => {
 const handleUserPage = async (req, res) => {
   // model = get data
   let userList = await userService.getUserList();
+  await userService.deleteUser(5);
   return res.render("user.ejs", { userList });
 }
 
@@ -20,13 +21,15 @@ const handleCreateNewUser = (req, res) => {
   let password = req.body.password;
   let username = req.body.username;
 
-  // userService.createNewUser(email, password, username)
+  userService.createNewUser(email, password, username)
+  return res.redirect("/user");
+}
 
 
-
-
-
-  return res.send("handleCreateNewUser");
+//  xoa
+const handleDeleteUser = async (req, res) => {
+  await userService.deleteUser(req.params.id)
+  return res.redirect("/user");
 }
 
 
@@ -37,7 +40,6 @@ const handleCreateNewUser = (req, res) => {
 
 
 
-
 module.exports = {
-  handleHelloWord, handleUserPage, handleCreateNewUser
+  handleHelloWord, handleUserPage, handleCreateNewUser, handleDeleteUser
 }

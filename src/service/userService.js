@@ -23,7 +23,9 @@ const hashUserPassword = (userPassword) => {
 
 
 // tao new 
-const createNewUser = (email, password, username) => {
+const createNewUser = async (email, password, username) => {
+  const connection = await mysql.createConnection({ host: 'localhost', user: 'root', database: 'jwt1', Promise: bluebird });
+
   let hashPass = hashUserPassword(password)
   // simple query
   connection.query(
@@ -40,32 +42,27 @@ const createNewUser = (email, password, username) => {
 //  lay ra list
 const getUserList = async () => {
   const connection = await mysql.createConnection({ host: 'localhost', user: 'root', database: 'jwt1', Promise: bluebird });
-
-  let users = [];
-  // return connection.query(
-  //   'Select * from users',
-  //   function (err, results, fields) {
-  //     if (err) {
-  //       console.log(err);
-  //       return users;
-  //     }
-  //     users = results;
-  //     console.log(">>run", users)
-  //     return users;
-  //   }
-  // );
   try {
     const [rows, fields] = await connection.execute('Select * from users');
     return rows;
   } catch (error) {
     console.log(">>check err", error)
   }
+}
 
+const deleteUser = async (id) => {
 
+  const connection = await mysql.createConnection({ host: 'localhost', user: 'root', database: 'jwt1', Promise: bluebird });
+  try {
+    const [rows, fields] = await connection.execute('delete from users where id =?', [id]);
+    return rows;
+  } catch (error) {
+    console.log(">> check err", error);
+  }
 }
 
 
 
 module.exports = {
-  createNewUser, getUserList
+  createNewUser, getUserList, deleteUser
 }

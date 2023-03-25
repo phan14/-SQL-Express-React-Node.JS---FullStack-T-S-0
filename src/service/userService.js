@@ -1,14 +1,11 @@
-import mysql from 'mysql2';
+
 import bcrypt from 'bcryptjs';
+import mysql from 'mysql2/promise'
+import bluebird from 'bluebird'
 
 
 
 // create the connection to database
-const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  database: 'jwt1'
-});
 
 
 
@@ -24,6 +21,8 @@ const hashUserPassword = (userPassword) => {
   // console.log(">>check passs: ", check)
 }
 
+
+// tao new 
 const createNewUser = (email, password, username) => {
   let hashPass = hashUserPassword(password)
   // simple query
@@ -39,18 +38,30 @@ const createNewUser = (email, password, username) => {
 
 
 //  lay ra list
-const getUserList = () => {
+const getUserList = async () => {
+  const connection = await mysql.createConnection({ host: 'localhost', user: 'root', database: 'jwt1', Promise: bluebird });
+
   let users = [];
-  // simple query
-  connection.query(
-    'Select * from users',
-    function (err, results, fields) {
-      if (err) {
-        console.log(err)
-      }
-      console.log("check results ", results)
-    }
-  );
+  // return connection.query(
+  //   'Select * from users',
+  //   function (err, results, fields) {
+  //     if (err) {
+  //       console.log(err);
+  //       return users;
+  //     }
+  //     users = results;
+  //     console.log(">>run", users)
+  //     return users;
+  //   }
+  // );
+  try {
+    const [rows, fields] = await connection.execute('Select * from users');
+    return rows;
+  } catch (error) {
+    console.log(">>check err", error)
+  }
+
+
 }
 
 

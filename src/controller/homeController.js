@@ -1,15 +1,4 @@
-import mysql from 'mysql2';
-
-// create the connection to database
-const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  database: 'jwt1'
-});
-
-
-
-
+import userService from '../service/userService';
 
 
 
@@ -29,15 +18,13 @@ const handleCreateNewUser = (req, res) => {
   let email = req.body.email;
   let password = req.body.password;
   let username = req.body.username;
-  // simple query
-  connection.query(
-    'INSERT INTO users(email,password,username) VALUES(?,?,?)', [email, password, username],
-    function (err, results, fields) {
-      if (err) {
-        console.log(err)
-      }
-    }
-  );
+
+  // userService.createNewUser(email, password, username)
+
+  userService.getUserList();
+
+
+
   return res.send("handleCreateNewUser");
 }
 

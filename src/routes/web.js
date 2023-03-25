@@ -12,6 +12,7 @@ const intitWebRoutes = (app) => {
   // path,hanler
   router.get("/", homeController.handleHelloWord);
   router.get("/user", homeController.handleUserPage);
+  router.post("/users/create-user", homeController.handleCreateNewUser)
 
   return app.use("/", router);
 }
